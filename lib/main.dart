@@ -3,10 +3,13 @@ import 'plant_scanner.dart';
 import 'shopping_list.dart';
 import 'garden_planner.dart';
 
-void main() { runApp(const GreenUrbanGrowApp()); }
+void main() {
+  runApp(const GreenUrbanGrowApp());
+}
 
 class GreenUrbanGrowApp extends StatelessWidget {
   const GreenUrbanGrowApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,6 +22,7 @@ class GreenUrbanGrowApp extends StatelessWidget {
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
