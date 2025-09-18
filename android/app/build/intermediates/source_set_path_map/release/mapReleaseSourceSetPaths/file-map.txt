@@ -1,0 +1,7 @@
+com.greenurbangrow.app-pngs-0 /data/data/com.termux/files/home/green-urban-grow/android/app/build/generated/res/pngs/release
+com.greenurbangrow.app-resValues-1 /data/data/com.termux/files/home/green-urban-grow/android/app/build/generated/res/resValues/release
+com.greenurbangrow.app-packageReleaseResources-2 /data/data/com.termux/files/home/green-urban-grow/android/app/build/intermediates/incremental/release/packageReleaseResources/merged.dir
+com.greenurbangrow.app-packageReleaseResources-3 /data/data/com.termux/files/home/green-urban-grow/android/app/build/intermediates/incremental/release/packageReleaseResources/stripped.dir
+com.greenurbangrow.app-release-4 /data/data/com.termux/files/home/green-urban-grow/android/app/build/intermediates/merged_res/release/mergeReleaseResources
+com.greenurbangrow.app-main-5 /data/data/com.termux/files/home/green-urban-grow/android/app/src/main/res
+com.greenurbangrow.app-release-6 /data/data/com.termux/files/home/green-urban-grow/android/app/src/release/res

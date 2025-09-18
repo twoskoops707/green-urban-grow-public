@@ -1,0 +1,2 @@
+rootProject.name = 'green-urban-grow'
+include ':app'
