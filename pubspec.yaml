@@ -1,9 +1,19 @@
 name: green_urban_grow
-description: Auto plant scan MVP
+description: Auto plant scan MVP offline
 version: 0.0.1
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
   path: ^1.8.2
-  http: ^1.1.0
+  tflite_flutter: ^0.10.0
+  image: ^4.0.15
+  permission_handler: ^11.0.1
+
+flutter:
+  assets:
+    - assets/model.tflite
+    - assets/labels.txt
+    - assets/care_tips.json

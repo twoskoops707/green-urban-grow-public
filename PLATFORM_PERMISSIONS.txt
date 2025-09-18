@@ -1,0 +1,10 @@
+--- Android (android/app/src/main/AndroidManifest.xml additions) ---
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+<uses-permission android:name="android.permission.CAMERA" />
+
+--- iOS (ios/Runner/Info.plist additions) ---
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs access to your photo library to select plant images.</string>
+<key>NSCameraUsageDescription</key>
+<string>This app needs access to your camera to take pictures of plants for identification.</string>
