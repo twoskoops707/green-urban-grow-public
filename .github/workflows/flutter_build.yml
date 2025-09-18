@@ -11,18 +11,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.7'
-
       - name: Get dependencies
         run: flutter pub get
-
       - name: Build Android APK
         run: flutter build apk --debug
-
       - name: Upload Android APK
         uses: actions/upload-artifact@v3
         with:
@@ -34,18 +30,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.13.7'
-
       - name: Get dependencies
         run: flutter pub get
-
       - name: Build iOS IPA
         run: flutter build ipa --no-codesign
-
       - name: Upload iOS IPA
         uses: actions/upload-artifact@v3
         with:
