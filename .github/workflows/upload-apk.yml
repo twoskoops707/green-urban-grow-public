@@ -1,0 +1,19 @@
+name: Upload Prebuilt APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Upload prebuilt APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: GreenUrbanGrow-APK
+          path: android/app/build/outputs/apk/release/app-release.apk
