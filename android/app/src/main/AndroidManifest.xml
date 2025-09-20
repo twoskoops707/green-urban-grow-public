@@ -1,24 +1,22 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.greenurbangrow">
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    package="com.greenurbangrow">
+    package="com.example.greenurbangrow">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="Green Urban Grow"
-        android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
+        android:label="GreenUrbanGrow"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.DeviceDefault.Light">
-        <activity android:name=".MainActivity"
-            android:exported="true">
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/Theme.GreenUrbanGrow">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
-
-</manifest>
 </manifest>
