@@ -19,7 +19,7 @@ jobs:
         run: cp ~/storage/downloads/app-release.apk android/app/build/outputs/apk/release/app-release.apk
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GreenUrbanGrow-APK
           path: android/app/build/outputs/apk/release/app-release.apk

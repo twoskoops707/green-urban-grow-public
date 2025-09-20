@@ -25,7 +25,7 @@ jobs:
           cd ../../../
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GreenUrbanGrow-App
           path: artifacts/GreenUrbanGrow-App.zip
