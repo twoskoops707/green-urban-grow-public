@@ -29,36 +29,3 @@ jobs:
         with:
           name: GreenUrbanGrow-App
           path: artifacts/GreenUrbanGrow-App.zip
-EOF && git add .github/workflows/build.yml && git commit -m "Add pseudo-build workflow" && git push https://github.com/twoskoops707/green-urban-grow.git main
-cd ~/green-urban-grow-clean && mkdir -p .github/workflows && cat > .github/workflows/build.yml << 'EOF'
-name: Android Pseudo-Build
-
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Fix AndroidManifest and validate
-        run: |
-          sed -i 's/package="[^"]*"//g' android/app/src/main/AndroidManifest.xml
-          sed -i '/<activity.*MainActivity/ s/>/ android:exported="true">/' android/app/src/main/AndroidManifest.xml
-
-      - name: Create pseudo-APK artifact
-        run: |
-          mkdir -p artifacts
-          cd android/app
-          zip -r ../../../artifacts/GreenUrbanGrow-App.zip .
-          cd ../../../
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: GreenUrbanGrow-App
-          path: artifacts/GreenUrbanGrow-App.zip
