@@ -19,7 +19,7 @@ jobs:
           ./build_apk.sh
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GreenUrbanGrow-APK
           path: android/app/build/outputs/apk/release/app-release.apk
