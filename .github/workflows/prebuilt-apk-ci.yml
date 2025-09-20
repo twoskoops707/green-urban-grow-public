@@ -12,13 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create APK output directory
-        run: mkdir -p android/app/build/outputs/apk/release
-
-      - name: Place prebuilt APK
-        run: cp ~/storage/downloads/app-release.apk android/app/build/outputs/apk/release/app-release.apk
-
-      - name: Upload APK artifact
+      - name: Upload APK artifact (if exists)
         uses: actions/upload-artifact@v4
         with:
           name: GreenUrbanGrow-APK
