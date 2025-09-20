@@ -1,10 +1,11 @@
-name: CI Checks Only
+name: Android CI Build
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,7 +15,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run lint / placeholder check
-        run: |
-          echo "No Gradle, no APK. Only checks for source files."
-          find ./android -name "*.kt" -o -name "*.java" -o -name "*.xml"
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./android/gradlew
+
+      - name: Build Android app
+        working-directory: ./android
+        run: ./gradlew assembleRelease
