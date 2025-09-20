@@ -1,0 +1,25 @@
+name: Build & Upload APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build APK without Gradle
+        working-directory: ./android
+        run: |
+          chmod +x ./build_apk.sh
+          ./build_apk.sh
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GreenUrbanGrow-APK
+          path: android/app/build/outputs/apk/release/app-release.apk

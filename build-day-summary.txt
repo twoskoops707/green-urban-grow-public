@@ -1,0 +1,49 @@
+--- GREEN URBAN GROW - DAY SUMMARY ---
+
+1. Code Written Today:
+
+# Workflows:
+.github/workflows/build.yml
+- Initially attempted Gradle build, artifact upload.
+- Errors: ./gradlew not found (no root, no Gradle), repeated failure.
+
+.github/workflows/upload-apk.yml
+- Correct workflow format for uploading prebuilt APK.
+- No Gradle involved, works with manual prebuilt APK.
+
+# AndroidManifest.xml fixes:
+- Tried to remove package attribute and add android:exported via perl one-liner:
+  perl -0777 -pe 's/\s*package="[^"]*"//s; s{(<activity\b(?:(?!android:exported)[\s\S])*?android:name="[^"]*MainActivity"(?:(?!android:exported)[\s\S])*?)>}{$1 android:exported="true">}smi' -i AndroidManifest.xml
+- Failed due to wrong path (green-urban-grow-clean vs green-urban-grow).
+
+# Other commands:
+- mkdir for workflow folders.
+- cp prebuilt APK to android/app/build/outputs/apk/release.
+- git add, commit, push commands.
+- find ~/ -type f -name "app-release.apk" used to locate APK.
+
+2. Errors Encountered:
+- Gradle attempts failed (./gradlew not found, SDK issues).
+- xmllint not installed in Termux CI environment.
+- Wrong paths (green-urban-grow vs green-urban-grow-clean).
+- Multiple syntax issues when combining EOF and && in one-liners.
+- Workflow dispatch errors when missing workflow_dispatch trigger.
+
+3. What Worked:
+- Uploading prebuilt APK using GitHub Actions.
+- Proper workflow YAML format without Gradle.
+- Creating directories and copying APK using single one-liner.
+
+4. Lessons Learned:
+- Gradle cannot be used on CI without root/setup.
+- One-liner YAML creation must separate EOF block from git commands.
+- Always check paths; clean vs regular repo can break commands.
+- Prebuilt APK approach is the only reliable method for CI in Termux environment.
+
+5. Notes for Next AI Programmer:
+- Skip Gradle completely for CI.
+- Focus on copying prebuilt APK to correct folder.
+- Ensure workflow_dispatch trigger exists if manual run is needed.
+- Verify all paths are accurate relative to the repo.
+- Single-line commands are safest for Termux workflow automation.
+
