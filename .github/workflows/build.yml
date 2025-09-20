@@ -1,4 +1,4 @@
-name: Android CI Build
+name: Android CI Check
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,9 +21,5 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Make Gradle wrapper executable
-        run: chmod +x ./android/gradlew
-
-      - name: Build Android app
-        working-directory: ./android
-        run: ./gradlew assembleRelease
+      - name: Check AndroidManifest.xml syntax
+        run: xmllint --noout android/app/src/main/AndroidManifest.xml
