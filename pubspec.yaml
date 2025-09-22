@@ -9,8 +9,6 @@ dependencies:
     sdk: flutter
   tflite_flutter: ^0.10.0
   image: ^4.0.15
-  permission_handler: ^11.3.1
-  image_picker: ^0.8.7+4
 
 flutter:
   uses-material-design: true
