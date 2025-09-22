@@ -1,3 +1,7 @@
+plugins {
+    id 'com.android.application'
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -11,11 +15,11 @@ if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found.")
 }
 
-apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion 33
+    namespace 'com.greenurbangrow'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
