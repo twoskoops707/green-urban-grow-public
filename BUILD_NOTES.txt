@@ -1,0 +1,1 @@
+BUILD STATUS: Local builds blocked by Android SDK license restrictions. Use pre-built APK workflow on GitHub.
