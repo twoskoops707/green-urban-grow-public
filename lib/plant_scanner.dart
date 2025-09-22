@@ -1,59 +1,61 @@
-import 'dart:io';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
-import 'package:image/image.dart' as img;
 
 class PlantScanner {
-  late Interpreter _interpreter;
-  List<String> _labels = [];
-
-  PlantScanner._();
-
-  static Future<PlantScanner> initialize() async {
-    final scanner = PlantScanner._();
-    await scanner._loadModel();
-    await scanner._loadLabels();
-    return scanner;
-  }
-
-  Future<void> _loadModel() async {
-    _interpreter = await Interpreter.fromAsset('assets/model.tflite');
-  }
-
-  Future<void> _loadLabels() async {
-    final careData = await File('assets/labels.txt').readAsString();
-    _labels = careData.split('\n');
-  }
-
-  Future<String> identifyPlant(String imagePath) async {
-    final imageBytes = await File(imagePath).readAsBytes();
-    final image = img.decodeImage(imageBytes)!;
-    final resized = img.copyResize(image, width: 224, height: 224);
-    var input = List.generate(1, (_) => List.generate(224, (_) => List.filled(224*3, 0.0)));
-
-    for (int y = 0; y < 224; y++) {
-      for (int x = 0; x < 224; x++) {
-        final pixel = resized.getPixel(x, y);
-        input[0][y][x*3+0] = ((pixel) & 0xFF) / 255.0; // Red
-        input[0][y][x*3+1] = ((pixel >> 8) & 0xFF) / 255.0; // Green
-        input[0][y][x*3+2] = ((pixel >> 16) & 0xFF) / 255.0; // Blue
-      }
-    }
-
-    var output = List.filled(_labels.length, 0.0).reshape([1, _labels.length]);
-    _interpreter.run(input, output);
-    final index = output[0].indexOf(output[0].reduce((a,b)=>a>b?a:b));
-    return _labels.isNotEmpty ? _labels[index] : 'Unknown';
+  static Future<PlantScanner> create() async {
+    return PlantScanner();
   }
 }
 
-class PlantScannerPage extends StatelessWidget {
-  final PlantScanner scanner;
-  const PlantScannerPage({required this.scanner, super.key});
+class PlantScannerWidget extends StatelessWidget {
+  const PlantScannerWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: const Text('Plant Scanner')), body: Container());
+    return Scaffold(
+      backgroundColor: const Color(0xFFF1F8E9),
+      body: Column(
+        children: [
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xFF2E7D32),
+                  const Color(0xFF4CAF50),
+                ],
+              ),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.camera_alt, size: 64, color: Colors.white),
+                  SizedBox(height: 16),
+                  Text(
+                    'Plant Scanner',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                'Plant scanning functionality',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Color(0xFF2E7D32),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
