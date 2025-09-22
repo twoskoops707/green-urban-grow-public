@@ -1,8 +1,6 @@
-name: Build APK Without Gradle
+name: Build APK with Flutter
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -10,19 +8,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: flutter-actions/setup-flutter@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
-          version: 3.22.4
+          flutter-version: '3.19.5'
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Build APK
-        run: flutter pub get && flutter build apk --release
+        run: flutter build apk --release
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: GreenUrbanGrow-Release-APK
+          name: green-urban-grow-apk
           path: build/app/outputs/flutter-apk/app-release.apk
