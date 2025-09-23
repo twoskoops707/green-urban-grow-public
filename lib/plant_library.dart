@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 class PlantLibrary extends StatelessWidget {
   const PlantLibrary({super.key});
 
-  final List<Plant> plants = const [
+  static const List<Plant> plants = [
     Plant('Tomatoes', 'https://en.wikipedia.org/wiki/Tomato', 'Balcony-friendly, needs 6+ hours sun'),
     Plant('Basil', 'https://en.wikipedia.org/wiki/Basil', 'Perfect for windowsills, frequent harvesting'),
     Plant('Lettuce', 'https://en.wikipedia.org/wiki/Lettuce', 'Fast-growing, great for small spaces'),
@@ -17,7 +17,9 @@ class PlantLibrary extends StatelessWidget {
 
   Future<void> _launchWikipedia(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      // Error handling would go here in production
     }
   }
 
@@ -32,10 +34,10 @@ class PlantLibrary extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: ListTile(
-              leading: const Icon(Icons.local_florist, color: Colors.green),
+              leading: const Icon(Icons.local_florist, color: Colors.green, semanticLabel: 'Plant icon'),
               title: Text(plant.name),
               subtitle: Text(plant.description),
-              trailing: const Icon(Icons.open_in_new),
+              trailing: const Icon(Icons.open_in_new, semanticLabel: 'Open in browser'),
               onTap: () => _launchWikipedia(plant.wikipediaUrl),
             ),
           );

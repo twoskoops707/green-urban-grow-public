@@ -13,16 +13,25 @@ class _CareRemindersState extends State<CareReminders> {
     Reminder('Check basil moisture', 'Every 2 days', false),
     Reminder('Fertilize plants', 'Weekly', false),
     Reminder('Harvest lettuce', 'When leaves are 3-4 inches', true),
+    Reminder('Prune herbs', 'As needed to encourage growth', false),
+    Reminder('Check for pests', 'Weekly inspection', true),
   ];
 
   void _toggleReminder(int index) {
     setState(() {
-      _reminders[index] = Reminder(
-        _reminders[index].task,
-        _reminders[index].schedule,
-        !_reminders[index].isActive,
-      );
+      _reminders[index].isActive = !_reminders[index].isActive;
     });
+  }
+
+  void _scheduleAllReminders() {
+    final activeCount = _reminders.where((r) => r.isActive).length;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Scheduled $activeCount active reminder(s)'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -36,8 +45,10 @@ class _CareRemindersState extends State<CareReminders> {
             color: Colors.blue[50],
             child: const Column(
               children: [
-                Text('Never forget plant care tasks!', 
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(
+                  'Never forget plant care tasks!', 
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 SizedBox(height: 8),
                 Text('Set reminders for watering, fertilizing, and harvesting'),
               ],
@@ -49,17 +60,19 @@ class _CareRemindersState extends State<CareReminders> {
               itemBuilder: (context, index) {
                 final reminder = _reminders[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   child: ListTile(
                     leading: Icon(
                       reminder.isActive ? Icons.notifications_active : Icons.notifications_off,
                       color: reminder.isActive ? Colors.green : Colors.grey,
+                      semanticLabel: reminder.isActive ? 'Active reminder' : 'Inactive reminder',
                     ),
                     title: Text(reminder.task),
                     subtitle: Text(reminder.schedule),
                     trailing: Switch(
                       value: reminder.isActive,
                       onChanged: (value) => _toggleReminder(index),
+                      semanticLabel: 'Toggle ${reminder.task} reminder',
                     ),
                   ),
                 );
@@ -69,14 +82,14 @@ class _CareRemindersState extends State<CareReminders> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton.icon(
-              onPressed: () {
-                // In real app: Schedule local notifications
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Reminders scheduled!')),
-                );
-              },
+              onPressed: _scheduleAllReminders,
               icon: const Icon(Icons.notification_add),
-              label: const Text('Schedule All Active Reminders'),
+              label: const Text('Schedule Active Reminders'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
             ),
           ),
         ],
@@ -88,7 +101,7 @@ class _CareRemindersState extends State<CareReminders> {
 class Reminder {
   final String task;
   final String schedule;
-  final bool isActive;
+  bool isActive;
 
   Reminder(this.task, this.schedule, this.isActive);
 }

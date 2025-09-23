@@ -4,7 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 class Community extends StatelessWidget {
   const Community({super.key});
 
-  final List<CommunityResource> resources = const [
+  static const List<CommunityResource> resources = [
     CommunityResource(
       'Urban Gardening Subreddit',
       'https://reddit.com/r/UrbanGardening',
@@ -29,7 +29,7 @@ class Community extends StatelessWidget {
 
   Future<void> _launchReddit(String url) async {
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     }
   }
 
@@ -42,10 +42,16 @@ class Community extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             color: Colors.orange[50],
-            child: const Text(
-              'Connect with urban gardeners worldwide',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+            child: const Column(
+              children: [
+                Text(
+                  'Connect with urban gardeners worldwide',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8),
+                Text('Share tips and get inspiration from the community'),
+              ],
             ),
           ),
           Expanded(
@@ -56,10 +62,10 @@ class Community extends StatelessWidget {
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   child: ListTile(
-                    leading: const Icon(Icons.people, color: Colors.orange),
+                    leading: const Icon(Icons.people, color: Colors.orange, semanticLabel: 'Community icon'),
                     title: Text(resource.name),
                     subtitle: Text(resource.description),
-                    trailing: const Icon(Icons.open_in_new),
+                    trailing: const Icon(Icons.open_in_new, semanticLabel: 'Open community'),
                     onTap: () => _launchReddit(resource.url),
                   ),
                 );
