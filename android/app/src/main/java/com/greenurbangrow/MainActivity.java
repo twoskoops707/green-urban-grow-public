@@ -1,17 +1,7 @@
 package com.greenurbangrow;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.TextView;
+import io.flutter.embedding.android.FlutterActivity;
 
-public class MainActivity extends Activity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Minimal UI for testing
-        TextView tv = new TextView(this);
-        tv.setText("Green Urban Grow App");
-        setContentView(tv);
-    }
+public class MainActivity extends FlutterActivity {
+    // Empty class for Flutter v2 embedding
 }
