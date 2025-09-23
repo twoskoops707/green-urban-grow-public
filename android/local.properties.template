@@ -1,0 +1,4 @@
+# This file is for local development only
+# For CI/CD builds, this file should be generated with correct paths
+sdk.dir=/home/runner/android-sdk
+flutter.sdk=/home/runner/flutter

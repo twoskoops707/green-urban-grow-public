@@ -111,7 +111,7 @@ class _GardenFeaturesState extends State<GardenFeatures> {
                 },
               ),
               _buildFeatureCard(
-                icon: Icons.calendar_today,
+                icon: Icons.seasonal_holiday,
                 title: 'Seasonal Planning',
                 subtitle: 'Year-round garden calendar',
                 color: const Color(0xFFFF9800),
