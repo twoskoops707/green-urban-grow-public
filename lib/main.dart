@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final scanner = await PlantScanner.initialize();
+                final scanner = await PlantScanner.create();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => PlantScannerPage(scanner: scanner)),
