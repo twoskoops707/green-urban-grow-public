@@ -32,11 +32,10 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              onPressed: () async {
-                final scanner = await PlantScanner.create();
+              onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PlantScannerPage(scanner: scanner)),
+                  MaterialPageRoute(builder: (context) => const PlantScannerWidget()),
                 );
               },
               child: const Text('Plant Scanner'),
