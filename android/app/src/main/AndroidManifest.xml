@@ -5,7 +5,6 @@
     
     <application
         android:label="Green Urban Grow"
-        android:name="io.flutter.app.FlutterApplication"
         android:theme="@style/LaunchTheme">
         
         <activity
