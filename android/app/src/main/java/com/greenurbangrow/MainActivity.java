@@ -3,5 +3,5 @@ package com.greenurbangrow;
 import io.flutter.embedding.android.FlutterActivity;
 
 public class MainActivity extends FlutterActivity {
-    // Empty class for Flutter v2 embedding
+    // This empty class uses Flutter's v2 embedding
 }

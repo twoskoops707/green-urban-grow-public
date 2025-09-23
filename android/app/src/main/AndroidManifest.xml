@@ -7,6 +7,10 @@
         android:label="Green Urban Grow"
         android:theme="@style/LaunchTheme">
         
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"
