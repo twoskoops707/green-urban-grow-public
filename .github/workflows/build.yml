@@ -8,25 +8,28 @@ on:
 
 jobs:
   build:
-    name: Build Release APK
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.16.9' # match your Flutter stable version
+      # Set up Flutter SDK
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.9'
 
-    - name: Flutter Pub Get
-      run: flutter pub get
+      # Get Dart/Flutter dependencies
+      - name: Get Dependencies
+        run: flutter pub get
 
-    - name: Build APK
-      run: flutter build apk --release --no-shrink
+      # Build the release APK
+      - name: Build APK
+        run: flutter build apk --release --no-shrink
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: app-release
-        path: build/app/outputs/flutter-apk/app-release.apk
+      # Upload the APK artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: green-urban-grow-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
