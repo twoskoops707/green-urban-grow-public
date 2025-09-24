@@ -1,37 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Community extends StatelessWidget {
   const Community({super.key});
 
   static const List<CommunityResource> resources = [
     CommunityResource(
-      'Urban Gardening Subreddit',
-      'https://reddit.com/r/UrbanGardening',
-      'Tips for small space gardening'
+      'Urban Gardening Tips',
+      'Small space gardening techniques',
+      'Container gardening, vertical farming, balcony setups'
     ),
     CommunityResource(
-      'Balcony Gardening',
-      'https://reddit.com/r/BalconyGardening', 
-      'Container gardening discussions'
+      'Balcony Gardening', 
+      'Making the most of limited space',
+      'Compact plants, space-saving containers, micro-gardening'
     ),
     CommunityResource(
-      'Hydroponics Community',
-      'https://reddit.com/r/Hydroponics',
-      'Soil-free growing techniques'
+      'Hydroponics Basics',
+      'Soil-free growing techniques',
+      'Nutrient solutions, water conservation, indoor setups'
     ),
     CommunityResource(
-      'Window Farming',
-      'https://reddit.com/r/WindowFarm',
-      'Windowsill gardening ideas'
+      'Windowsill Gardening',
+      'Maximizing indoor light',
+      'Herb gardens, microgreens, light requirements'
     ),
   ];
-
-  Future<void> _launchReddit(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +38,12 @@ class Community extends StatelessWidget {
             child: const Column(
               children: [
                 Text(
-                  'Connect with urban gardeners worldwide',
+                  'Urban Gardening Community Resources',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 8),
-                Text('Share tips and get inspiration from the community'),
+                Text('Tips and techniques for small space gardening'),
               ],
             ),
           ),
@@ -64,9 +57,18 @@ class Community extends StatelessWidget {
                   child: ListTile(
                     leading: const Icon(Icons.people, color: Colors.orange, semanticLabel: 'Community icon'),
                     title: Text(resource.name),
-                    subtitle: Text(resource.description),
-                    trailing: const Icon(Icons.open_in_new, semanticLabel: 'Open community'),
-                    onTap: () => _launchReddit(resource.url),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(resource.description),
+                        const SizedBox(height: 4),
+                        Text(resource.details, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      ],
+                    ),
+                    trailing: const Icon(Icons.chat, semanticLabel: 'Community tips'),
+                    onTap: () {
+                      _showCommunityTips(context, resource);
+                    },
                   ),
                 );
               },
@@ -76,12 +78,38 @@ class Community extends StatelessWidget {
       ),
     );
   }
+
+  void _showCommunityTips(BuildContext context, CommunityResource resource) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(resource.name),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(resource.description),
+            const SizedBox(height: 10),
+            Text(resource.details),
+            const SizedBox(height: 10),
+            const Text('Join online gardening communities to share experiences and learn from others!'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class CommunityResource {
   final String name;
-  final String url;
   final String description;
+  final String details;
 
-  const CommunityResource(this.name, this.url, this.description);
+  const CommunityResource(this.name, this.description, this.details);
 }

@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PlantLibrary extends StatelessWidget {
   const PlantLibrary({super.key});
 
   static const List<Plant> plants = [
-    Plant('Tomatoes', 'https://en.wikipedia.org/wiki/Tomato', 'Balcony-friendly, needs 6+ hours sun'),
-    Plant('Basil', 'https://en.wikipedia.org/wiki/Basil', 'Perfect for windowsills, frequent harvesting'),
-    Plant('Lettuce', 'https://en.wikipedia.org/wiki/Lettuce', 'Fast-growing, great for small spaces'),
-    Plant('Mint', 'https://en.wikipedia.org/wiki/Mint', 'Container-grown to prevent spreading'),
-    Plant('Microgreens', 'https://en.wikipedia.org/wiki/Microgreen', 'Harvest in 1-2 weeks, high nutrition'),
-    Plant('Strawberries', 'https://en.wikipedia.org/wiki/Strawberry', 'Vertical planters save space'),
-    Plant('Chili Peppers', 'https://en.wikipedia.org/wiki/Chili_pepper', 'Compact varieties for containers'),
-    Plant('Herbs', 'https://en.wikipedia.org/wiki/Herb', 'Windowsill herb garden basics'),
+    Plant('Tomatoes', 'Balcony-friendly, needs 6+ hours sun', 'Solanum lycopersicum'),
+    Plant('Basil', 'Perfect for windowsills, frequent harvesting', 'Ocimum basilicum'),
+    Plant('Lettuce', 'Fast-growing, great for small spaces', 'Lactuca sativa'),
+    Plant('Mint', 'Container-grown to prevent spreading', 'Mentha'),
+    Plant('Microgreens', 'Harvest in 1-2 weeks, high nutrition', 'Various species'),
+    Plant('Strawberries', 'Vertical planters save space', 'Fragaria × ananassa'),
+    Plant('Chili Peppers', 'Compact varieties for containers', 'Capsicum annuum'),
+    Plant('Herbs Collection', 'Windowsill herb garden basics', 'Various species'),
   ];
-
-  Future<void> _launchWikipedia(String url) async {
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      // Error handling would go here in production
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +27,47 @@ class PlantLibrary extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.local_florist, color: Colors.green, semanticLabel: 'Plant icon'),
               title: Text(plant.name),
-              subtitle: Text(plant.description),
-              trailing: const Icon(Icons.open_in_new, semanticLabel: 'Open in browser'),
-              onTap: () => _launchWikipedia(plant.wikipediaUrl),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(plant.description),
+                  const SizedBox(height: 4),
+                  Text('Scientific: ${plant.scientificName}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                ],
+              ),
+              trailing: const Icon(Icons.info_outline, semanticLabel: 'Plant information'),
+              onTap: () {
+                _showPlantDetails(context, plant);
+              },
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _showPlantDetails(BuildContext context, Plant plant) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(plant.name),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Scientific Name: ${plant.scientificName}'),
+            const SizedBox(height: 10),
+            Text(plant.description),
+            const SizedBox(height: 10),
+            const Text('For more detailed information, visit gardening websites or consult local experts.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
@@ -49,8 +75,8 @@ class PlantLibrary extends StatelessWidget {
 
 class Plant {
   final String name;
-  final String wikipediaUrl;
   final String description;
+  final String scientificName;
 
-  const Plant(this.name, this.wikipediaUrl, this.description);
+  const Plant(this.name, this.description, this.scientificName);
 }

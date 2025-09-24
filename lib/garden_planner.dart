@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class GardenPlanner extends StatefulWidget {
   const GardenPlanner({super.key});
@@ -9,40 +8,30 @@ class GardenPlanner extends StatefulWidget {
 }
 
 class _GardenPlannerState extends State<GardenPlanner> {
-  final String amazonAffiliateId = 'greenurban08-20';
-  bool _isMeasuring = false;
-  String _gardenType = 'vegetables';
   String _spaceType = 'balcony';
 
   final Map<String, List<UrbanProduct>> _productRecommendations = {
     'balcony': [
-      UrbanProduct('Royal Gold Soil', 'B08XYZ1234', '\$24.99', 'Premium container soil'),
-      UrbanProduct('Vertical Planter', 'B09ABC5678', '\$39.99', 'Space-saving design'),
-      UrbanProduct('Self-Watering Pots', 'B07DEF9012', '\$29.99', 'Reduces watering frequency'),
+      UrbanProduct('Royal Gold Soil', '\$24.99', 'Premium container soil for potted plants'),
+      UrbanProduct('Vertical Planter', '\$39.99', 'Space-saving design for small areas'),
+      UrbanProduct('Self-Watering Pots', '\$29.99', 'Reduces watering frequency'),
     ],
     'windowsill': [
-      UrbanProduct('Windowsill Herb Kit', 'B08GHI3456', '\$19.99', 'Complete starter set'),
-      UrbanProduct('LED Grow Light', 'B09JKL7890', '\$34.99', 'Low-energy plant light'),
-      UrbanProduct('Mini Watering Can', 'B07MNO1234', '\$12.99', 'Perfect for small spaces'),
+      UrbanProduct('Windowsill Herb Kit', '\$19.99', 'Complete starter set for beginners'),
+      UrbanProduct('LED Grow Light', '\$34.99', 'Low-energy plant light for indoors'),
+      UrbanProduct('Mini Watering Can', '\$12.99', 'Perfect for small spaces'),
     ],
     'vertical': [
-      UrbanProduct('Wall Planter System', 'B08PQR5678', '\$49.99', 'Modular vertical garden'),
-      UrbanProduct('Pocket Planters', 'B09STU9012', '\$22.99', 'Felt wall planters'),
-      UrbanProduct('Drip Irrigation Kit', 'B07VWX3456', '\$45.99', 'Automatic watering'),
+      UrbanProduct('Wall Planter System', '\$49.99', 'Modular vertical garden panels'),
+      UrbanProduct('Pocket Planters', '\$22.99', 'Felt wall planters for herbs'),
+      UrbanProduct('Drip Irrigation Kit', '\$45.99', 'Automatic watering system'),
     ],
     'hydroponic': [
-      UrbanProduct('Countertop Hydroponics', 'B08YZA7890', '\$89.99', 'Soil-free growing'),
-      UrbanProduct('Nutrient Solution', 'B09BCD1234', '\$18.99', 'Essential plant food'),
-      UrbanProduct('pH Testing Kit', 'B07EFG5678', '\$14.99', 'Maintain optimal levels'),
+      UrbanProduct('Countertop Hydroponics', '\$89.99', 'Soil-free growing system'),
+      UrbanProduct('Nutrient Solution', '\$18.99', 'Essential plant food mix'),
+      UrbanProduct('pH Testing Kit', '\$14.99', 'Maintain optimal water levels'),
     ],
   };
-
-  Future<void> _launchProduct(String asin) async {
-    final url = 'https://www.amazon.com/dp/$asin?tag=$amazonAffiliateId';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +94,14 @@ class _GardenPlannerState extends State<GardenPlanner> {
                     Text(product.price, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green)),
                   ],
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16, semanticLabel: 'View product'),
-                onTap: () => _launchProduct(product.asin),
+                trailing: const Icon(Icons.info_outline, size: 20, semanticLabel: 'Product info'),
+                onTap: () {
+                  _showProductInfo(context, product);
+                },
               ),
             )).toList(),
 
-            // Affiliate Disclosure
+            // Note about online shopping
             Container(
               margin: const EdgeInsets.only(top: 20),
               padding: const EdgeInsets.all(12),
@@ -119,7 +110,7 @@ class _GardenPlannerState extends State<GardenPlanner> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Text(
-                'As an Amazon Associate, we earn from qualifying purchases. Product prices may vary.',
+                'These products are commonly available at garden centers or online retailers. Prices are approximate.',
                 style: TextStyle(fontSize: 12, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
@@ -129,15 +120,40 @@ class _GardenPlannerState extends State<GardenPlanner> {
       ),
     );
   }
+
+  void _showProductInfo(BuildContext context, UrbanProduct product) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(product.name),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Price: ${product.price}'),
+            const SizedBox(height: 10),
+            Text(product.description),
+            const SizedBox(height: 10),
+            const Text('Available at garden centers and online retailers.'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class UrbanProduct {
   final String name;
-  final String asin;
   final String price;
   final String description;
 
-  UrbanProduct(this.name, this.asin, this.price, this.description);
+  UrbanProduct(this.name, this.price, this.description);
 }
 
 extension StringExtension on String {
