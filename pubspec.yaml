@@ -1,11 +1,14 @@
 name: green_urban_grow
+description: Urban gardening app with full integrations
 version: 1.0.0
 environment:
   sdk: ">=3.0.0 <4.0.0"
+
 dependencies:
   flutter:
     sdk: flutter
-  url_launcher: ^6.1.11
+  url_launcher: ^6.0.20
   http: ^0.13.5
+
 flutter:
   uses-material-design: true
