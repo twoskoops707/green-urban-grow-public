@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'garden_planner.dart';
+import 'plant_library.dart';
+import 'care_reminders.dart';
+import 'community.dart';
+import 'news_feed.dart';
 
 void main() {
   runApp(const GreenUrbanGrowApp());
@@ -11,40 +16,52 @@ class GreenUrbanGrowApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Green Urban Grow',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-      home: const HomePage(),
+      theme: ThemeData(primarySwatch: Colors.green),
+      home: const HomeScreen(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _screens = <Widget>[
+    GardenPlanner(),
+    PlantLibrary(),
+    CareReminders(),
+    Community(),
+    NewsFeed(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Green Urban Grow'),
-      ),
-      body: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.local_florist, size: 64, color: Colors.green),
-            SizedBox(height: 20),
-            Text(
-              'Urban Gardening App',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Coming Soon',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.yard), label: 'Planner'),
+          BottomNavigationBarItem(icon: Icon(Icons.local_florist), label: 'Library'),
+          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: 'Reminders'),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Community'),
+          BottomNavigationBarItem(icon: Icon(Icons.article), label: 'News'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.green,
+        onTap: _onItemTapped,
       ),
     );
   }
