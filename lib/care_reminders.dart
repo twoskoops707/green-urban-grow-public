@@ -65,7 +65,6 @@ class _CareRemindersState extends State<CareReminders> {
                     leading: Icon(
                       reminder.isActive ? Icons.notifications_active : Icons.notifications_off,
                       color: reminder.isActive ? Colors.green : Colors.grey,
-                      semanticLabel: reminder.isActive ? 'Active reminder' : 'Inactive reminder',
                     ),
                     title: Text(reminder.task),
                     subtitle: Text(reminder.schedule),
