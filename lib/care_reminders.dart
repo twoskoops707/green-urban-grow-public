@@ -72,7 +72,6 @@ class _CareRemindersState extends State<CareReminders> {
                     trailing: Switch(
                       value: reminder.isActive,
                       onChanged: (value) => _toggleReminder(index),
-                      semanticLabel: 'Toggle ${reminder.task} reminder',
                     ),
                   ),
                 );
