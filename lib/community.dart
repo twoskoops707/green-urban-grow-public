@@ -1,132 +1,160 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'services/reddit_service.dart';
+import 'services/content_service.dart';
 
-class Community extends StatelessWidget {
+class Community extends StatefulWidget {
   const Community({super.key});
 
+  @override
+  _CommunityState createState() => _CommunityState();
+}
+
+class _CommunityState extends State<Community> {
   final String amazonAffiliateId = 'greenurban08-20';
+  final RedditService _redditService = RedditService();
+  final ContentService _contentService = ContentService();
+  List<RedditPost> _posts = [];
+  bool _isLoading = true;
 
-  static const List<CommunityResource> resources = [
-    CommunityResource(
-      'Urban Gardening Subreddit',
-      'https://reddit.com/r/UrbanGardening',
-      '1.2M members sharing small-space tips',
-      'Discussion about container gardening, balcony setups, space-saving techniques',
-      ['B08CONTAIN', 'B09BALCONY1', 'B07SMALLSP']
-    ),
-    CommunityResource(
-      'Hydroponics Community', 
-      'https://reddit.com/r/Hydroponics',
-      '850K hydroponic enthusiasts',
-      'Soil-free growing, nutrient solutions, indoor systems',
-      ['B08HYDROP1', 'B09NUTRIENT', 'B07LEDGROW']
-    ),
-    CommunityResource(
-      'Balcony Gardening',
-      'https://reddit.com/r/BalconyGardening',
-      '150K balcony gardeners',
-      'Maximizing limited outdoor space, container varieties',
-      ['B08BALCONY2', 'B09RAILING', 'B07POTSTAND']
-    ),
-    CommunityResource(
-      'Indoor Gardening',
-      'https://reddit.com/r/IndoorGarden',
-      '2.1M indoor plant lovers',
-      'Lighting solutions, humidity control, pest management',
-      ['B08INDOOR1', 'B09GROWLIGHT', 'B07HUMIDITY']
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _loadCommunityContent();
+  }
 
-  Future<void> _launchUrl(String url) async {
+  Future<void> _loadCommunityContent() async {
+    final posts = await _redditService.fetchGardeningPosts();
+    setState(() {
+      _posts = posts;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _launchAmazonProduct(String asin) async {
+    final url = 'https://www.amazon.com/dp/$asin?tag=$amazonAffiliateId';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     }
   }
 
-  Future<void> _launchAmazonProduct(String asin) async {
-    final url = 'https://www.amazon.com/dp/$asin?tag=$amazonAffiliateId';
-    await _launchUrl(url);
-  }
-
-  Future<void> _searchCommunityProducts(String communityName) async {
-    final query = 'best products recommended $communityName reddit';
-    final url = 'https://www.google.com/search?q=${Uri.encodeComponent(query)}';
-    await _launchUrl(url);
+  Future<void> _joinRedditCommunity() async {
+    const url = 'https://www.reddit.com/r/GreenUrbanGrow';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Gardening Community')),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.orange[50],
-            child: const Column(
+      appBar: AppBar(
+        title: const Text('Green Urban Grow Community'),
+        backgroundColor: const Color(0xFF2E7D32),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _isLoading ? null : _loadCommunityContent,
+            tooltip: 'Refresh Posts',
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _joinRedditCommunity,
+        backgroundColor: Colors.orange,
+        child: const Icon(Icons.add, color: Colors.white),
+        tooltip: 'Join Our Reddit Community',
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
               children: [
-                Text(
-                  'Connect with Urban Gardeners Worldwide',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+                // Community Header
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  color: Colors.green[50],
+                  child: const Column(
+                    children: [
+                      Icon(Icons.eco, size: 40, color: Color(0xFF2E7D32)),
+                      SizedBox(height: 8),
+                      Text(
+                        'Organic Urban Gardening Community',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Share organic gardening tips and connect with sustainable growers',
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'Learn from real experiences and discover recommended products',
-                  textAlign: TextAlign.center,
+                
+                // Reddit Posts
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _posts.length,
+                    itemBuilder: (context, index) {
+                      final post = _posts[index];
+                      return RedditPostCard(
+                        post: post,
+                        onProductTap: (plantType) {
+                          final products = _contentService.getOrganicProducts(plantType);
+                          _showOrganicProducts(context, products, plantType);
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: resources.length,
-              itemBuilder: (context, index) {
-                final resource = resources[index];
-                return CommunityResourceCard(
-                  resource: resource,
-                  onCommunityTap: _launchUrl,
-                  onAmazonTap: _launchAmazonProduct,
-                  onSearchTap: _searchCommunityProducts,
-                );
-              },
+    );
+  }
+
+  void _showOrganicProducts(BuildContext context, List<OrganicProduct> products, String plantType) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Recommended Organic Products for $plantType',
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            ...products.map((product) => ListTile(
+              leading: const Icon(Icons.eco, color: Colors.green),
+              title: Text(product.name),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(product.description),
+                  Text('\$${product.price} • ${product.brand}'),
+                ],
+              ),
+              trailing: const Icon(Icons.shopping_cart),
+              onTap: () => _launchAmazonProduct(product.asin),
+            )),
+            const SizedBox(height: 16),
+            OutlinedButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class CommunityResource {
-  final String name;
-  final String url;
-  final String members;
-  final String description;
-  final List<String> amazonAsins;
+class RedditPostCard extends StatelessWidget {
+  final RedditPost post;
+  final Function(String) onProductTap;
 
-  const CommunityResource(
-    this.name,
-    this.url,
-    this.members,
-    this.description,
-    this.amazonAsins,
-  );
-}
-
-class CommunityResourceCard extends StatelessWidget {
-  final CommunityResource resource;
-  final Function(String) onCommunityTap;
-  final Function(String) onAmazonTap;
-  final Function(String) onSearchTap;
-
-  const CommunityResourceCard({
-    super.key,
-    required this.resource,
-    required this.onCommunityTap,
-    required this.onAmazonTap,
-    required this.onSearchTap,
-  });
+  const RedditPostCard({super.key, required this.post, required this.onProductTap});
 
   @override
   Widget build(BuildContext context) {
@@ -137,89 +165,89 @@ class CommunityResourceCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Post Header
             Row(
               children: [
-                const Icon(Icons.people, color: Colors.orange, size: 30),
+                CircleAvatar(
+                  backgroundColor: _getSubredditColor(post.subreddit),
+                  child: Text(
+                    post.subreddit[0].toUpperCase(),
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        resource.name,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        'r/${post.subreddit}',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        resource.members,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                        post.getTimeAgo(),
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ],
                   ),
                 ),
+                Chip(
+                  label: Text('${post.score} 👍'),
+                  backgroundColor: Colors.green[50],
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              resource.description,
-              style: const TextStyle(fontSize: 14, height: 1.4),
-            ),
-            const SizedBox(height: 16),
             
-            // Community Recommended Products
-            const Text(
-              'Community Recommended:',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            // Post Content
+            Text(
+              post.title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: resource.amazonAsins.map((asin) {
-                return ActionChip(
-                  avatar: const Icon(Icons.thumb_up, size: 14),
-                  label: const Text('Popular Pick'),
-                  onPressed: () => onAmazonTap(asin),
-                  backgroundColor: Colors.orange[50],
-                  labelStyle: const TextStyle(fontSize: 12),
-                );
-              }).toList(),
+            Text(
+              post.body.length > 200 ? '${post.body.substring(0, 200)}...' : post.body,
+              style: const TextStyle(fontSize: 14),
             ),
             
-            const SizedBox(height: 16),
-            
-            // Action Buttons
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.forum, size: 16),
-                    label: const Text('Join Community'),
-                    onPressed: () => onCommunityTap(resource.url),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.search, size: 16),
-                    label: const Text('Find Products'),
-                    onPressed: () => onSearchTap(resource.name),
-                  ),
-                ),
-              ],
-            ),
+            // Organic Product Suggestions
+            if (_containsGardeningKeywords(post.title + post.body)) ...[
+              const SizedBox(height: 12),
+              const Text(
+                'Organic Product Suggestions:',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: _extractPlantTypes(post.title + post.body).map((plantType) {
+                  return ActionChip(
+                    avatar: const Icon(Icons.eco, size: 16),
+                    label: Text(plantType),
+                    onPressed: () => onProductTap(plantType),
+                    backgroundColor: Colors.green[50],
+                  );
+                }).toList(),
+              ),
+            ],
           ],
         ),
       ),
     );
+  }
+
+  Color _getSubredditColor(String subreddit) {
+    final colors = [Colors.green, Colors.orange, Colors.blue, Colors.purple];
+    return colors[subreddit.hashCode % colors.length];
+  }
+
+  bool _containsGardeningKeywords(String text) {
+    final keywords = ['tomato', 'basil', 'lettuce', 'herb', 'vegetable', 'flower', 'plant', 'grow', 'soil', 'fertilizer'];
+    return keywords.any((keyword) => text.toLowerCase().contains(keyword));
+  }
+
+  List<String> _extractPlantTypes(String text) {
+    final plantTypes = ['tomatoes', 'basil', 'lettuce', 'herbs', 'vegetables', 'flowers'];
+    return plantTypes.where((type) => text.toLowerCase().contains(type)).toList();
   }
 }
