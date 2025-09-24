@@ -2,7 +2,7 @@ name: green_urban_grow
 description: Urban gardening app for small spaces
 version: 1.0.0
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ">=2.17.0 <3.0.0"
   
 dependencies:
   flutter:
@@ -10,5 +10,3 @@ dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/care_tips.json

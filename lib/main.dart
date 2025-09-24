@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'garden_planner.dart';
-import 'plant_library.dart';
-import 'community.dart';
-import 'care_reminders.dart';
 
 void main() {
   runApp(const GreenUrbanGrowApp());
@@ -17,8 +13,6 @@ class GreenUrbanGrowApp extends StatelessWidget {
       title: 'Green Urban Grow',
       theme: ThemeData(
         primarySwatch: Colors.green,
-        primaryColor: const Color(0xFF2E7D32),
-        scaffoldBackgroundColor: const Color(0xFFF9FBE7),
       ),
       home: const HomePage(),
     );
@@ -33,56 +27,22 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Green Urban Grow'),
-        backgroundColor: const Color(0xFF2E7D32),
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        padding: const EdgeInsets.all(16),
-        children: [
-          _buildFeatureCard(
-            context,
-            'AR Garden Planner',
-            Icons.camera_alt,
-            Colors.green,
-            () => Navigator.push(context, MaterialPageRoute(builder: (context) => const GardenPlanner())),
-          ),
-          _buildFeatureCard(
-            context,
-            'Plant Library',
-            Icons.local_florist,
-            Colors.blue,
-            () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PlantLibrary())),
-          ),
-          _buildFeatureCard(
-            context,
-            'Care Reminders',
-            Icons.notifications,
-            Colors.orange,
-            () => Navigator.push(context, MaterialPageRoute(builder: (context) => const CareReminders())),
-          ),
-          _buildFeatureCard(
-            context,
-            'Community',
-            Icons.people,
-            Colors.purple,
-            () => Navigator.push(context, MaterialPageRoute(builder: (context) => const Community())),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureCard(BuildContext context, String title, IconData icon, Color color, VoidCallback onTap) {
-    return Card(
-      elevation: 4,
-      child: InkWell(
-        onTap: onTap,
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: color),
-            const SizedBox(height: 10),
-            Text(title, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Icon(Icons.local_florist, size: 64, color: Colors.green),
+            SizedBox(height: 20),
+            Text(
+              'Urban Gardening App',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(
+              'Coming Soon',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
           ],
         ),
       ),
