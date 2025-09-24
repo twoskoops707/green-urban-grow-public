@@ -7,7 +7,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  url_launcher: ^6.1.11
+  url_launcher: ^6.0.20
 
 flutter:
   uses-material-design: true
