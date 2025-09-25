@@ -20,7 +20,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build APK with Gradle
+      - name: Build APK (Gradle)
         working-directory: android
         run: ./gradlew assembleRelease
 
